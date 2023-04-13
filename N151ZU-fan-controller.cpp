@@ -1,3 +1,4 @@
+#include <bits/chrono.h>
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
@@ -100,16 +101,20 @@ static unsigned int time() {
 }
 
 int main(int argc, char *argv[]) {
-  int lastFanSpeed =
-      -1; // last fan speed value, used to avoid write speed if not necessary
-  int slidingMaxFanSpeed =
-      -1; // last max speed value, used in combination with FAN_PEAK_HOLD_TIME
-  unsigned int maxFanSpeedTime =
-      0; // time at which the last max was reached, used in combination with
-         // FAN_PEAK_HOLD_TIME
-  unsigned int lastTimeFanUpdate =
-      0; // use this to periodically set the temp unconditionnaly (useful when
-         // wake of from sleep)
+  // last fan speed value, used to avoid write speed if not necessary
+  int lastFanSpeed = 1;
+
+  // last max speed value, used in combination with FAN_PEAK_HOLD_TIME
+  int slidingMaxFanSpeed = -1;
+
+  // time at which the last max was reached, used in combination with
+  // FAN_PEAK_HOLD_TIME
+  unsigned int maxFanSpeedTime = 0;
+
+  // use this to periodically set the temp unconditionally (seuful when wake up
+  // from sleep)
+  unsigned int lastTimeFanUpdate = 0;
+
   while (1) {
     int temp = GetLocalTemp();
     // dynamic fan speed is the computed instantaneous speed, whithout
