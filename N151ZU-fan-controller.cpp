@@ -117,66 +117,39 @@ int main(int argc, char *argv[]) {
 
   while (1) {
     int temp = GetLocalTemp();
-
-    // dynamic fan speed is the computed instantaneous speed without hysteries
+    // dynamic fan speed is the computed instantaneous speed, whithout
+    // hysteresis (FAN_PEAK_HOLD_TIME)
     int dynamicFanSpeed = round(
         (float)((float)(temp - FAN_OFF_TEMP) / (FAN_MAX_TEMP - FAN_OFF_TEMP) *
                     (255 - FAN_START_VALUE) +
                 FAN_START_VALUE));
-
-    if (dynamicFanSpeed < FAN_START_VALUE) {
+    if (dynamicFanSpeed < FAN_START_VALUE)
       dynamicFanSpeed = 0;
-    }
-    if (dynamicFanSpeed > 255) {
+    if (dynamicFanSpeed > 255)
       dynamicFanSpeed = 255;
-    }
 
     if (dynamicFanSpeed > slidingMaxFanSpeed ||
-        time() > maxFanSpeedTime + FAN_PEAK_HOLD_TIME) {
+        time() > maxFanSpeedTime +
+                     FAN_PEAK_HOLD_TIME) { // update max values if max is
+                                           // overcome or if the time
+                                           // (FAN_PEAK_HOLD_TIME) is reached
       slidingMaxFanSpeed = dynamicFanSpeed;
       maxFanSpeedTime = time();
     }
-
     if (lastFanSpeed != slidingMaxFanSpeed ||
-        lastTimeFanUpdate + MAX_FAN_SET_INTERVAL < time()) {
+        lastTimeFanUpdate + MAX_FAN_SET_INTERVAL <
+            time()) { // send value if it changed or if we didn't do it since
+                      // more than "MAX_FAN_SET_INTERVAL" seconds.
       setFanSpeed(max(FAN_MIN_VALUE, slidingMaxFanSpeed));
       lastTimeFanUpdate = time();
+#ifdef VERBOSE
+      cout << "T:" << temp << "°C | set fan to "
+           << round((float)(slidingMaxFanSpeed) / 255 * 100) << "%";
+#endif
     }
-
+    cout << endl;
     lastFanSpeed = slidingMaxFanSpeed;
     usleep(REFRESH_RATE * 1000);
   }
-
-  //   while (1) {
-  //     int temp = GetLocalTemp();
-  //     // dynamic fan speed is the computed instantaneous speed, whithout
-  //     // hysteresis (FAN_PEAK_HOLD_TIME)
-  //     if (dynamicFanSpeed < FAN_START_VALUE)
-  //       dynamicFanSpeed = 0;
-  //     if (dynamicFanSpeed > 255)
-  //       dynamicFanSpeed = 255;
-  //
-  //     if (dynamicFanSpeed > slidingMaxFanSpeed ||
-  //         time() > maxFanSpeedTime +
-  //                      FAN_PEAK_HOLD_TIME) { // update max values if max is
-  //                                            // overcome or if the time
-  //                                            // (FAN_PEAK_HOLD_TIME) is
-  //                                            reached
-  //       slidingMaxFanSpeed = dynamicFanSpeed;
-  //       maxFanSpeedTime = time();
-  //     }
-  //     if (lastFanSpeed != slidingMaxFanSpeed ||
-  //         lastTimeFanUpdate + MAX_FAN_SET_INTERVAL <
-  //             time()) { // send value if it changed or if we didn't do it
-  //             since
-  //                       // more than "MAX_FAN_SET_INTERVAL" seconds.
-  //       setFanSpeed(max(FAN_MIN_VALUE, slidingMaxFanSpeed));
-  //       lastTimeFanUpdate = time();
-  // #ifdef VERBOSE
-  //       cout << "T:" << temp << "°C | set fan to "
-  //            << round((float)(slidingMaxFanSpeed) / 255 * 100) << "%";
-  // #endif
-  //     }
-  cout << endl;
   return 0;
 }
