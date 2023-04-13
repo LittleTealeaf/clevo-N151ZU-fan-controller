@@ -20,7 +20,7 @@ using namespace std;
   10000 // when a maximum of fan rotation rate is reached, hold much time (ms)
         // to hold it before allowing to decrease the value
 
-#define REFRESH_RATE 250 // time to wait between each controller loop (ms)
+#define REFRESH_RATE 1000 // time to wait between each controller loop (ms)
 #define MAX_FAN_SET_INTERVAL                                                   \
   2000 // maximal time between two fan rate send command
 
