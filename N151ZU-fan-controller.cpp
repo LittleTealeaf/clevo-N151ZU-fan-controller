@@ -142,6 +142,9 @@ int main(int argc, char *argv[]) {
       setFanSpeed(max(FAN_MIN_VALUE, slidingMaxFanSpeed));
       lastTimeFanUpdate = time();
     }
+
+    lastFanSpeed = slidingMaxFanSpeed;
+    usleep(REFRESH_RATE * 1000);
   }
 
   //   while (1) {
@@ -174,8 +177,6 @@ int main(int argc, char *argv[]) {
   //            << round((float)(slidingMaxFanSpeed) / 255 * 100) << "%";
   // #endif
   //     }
-  //     cout << endl;
-  //     lastFanSpeed = slidingMaxFanSpeed;
-  //     usleep(REFRESH_RATE * 1000);
+  cout << endl;
   return 0;
 }
