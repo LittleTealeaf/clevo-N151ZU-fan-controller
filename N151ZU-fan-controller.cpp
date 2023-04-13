@@ -123,24 +123,25 @@ int main(int argc, char *argv[]) {
         (float)((float)(temp - FAN_OFF_TEMP) / (FAN_MAX_TEMP - FAN_OFF_TEMP) *
                     (255 - FAN_START_VALUE) +
                 FAN_START_VALUE));
-		
-		if(dynamicFanSpeed < FAN_START_VALUE) {
-			dynamicFanSpeed = 0;
-		}
-		if(dynamicFanSpeed > 255) {
-			dynamicFanSpeed = 255;
-		}
 
-		if(dynamicFanSpeed > slidingMaxFanSpeed || time() > maxFanSpeedTime + FAN_PEAK_HOLD_TIME ) {
-			slidingMaxFanSpeed = dynamicFanSpeed;
-			maxFanSpeedTime = time();
-		}
+    if (dynamicFanSpeed < FAN_START_VALUE) {
+      dynamicFanSpeed = 0;
+    }
+    if (dynamicFanSpeed > 255) {
+      dynamicFanSpeed = 255;
+    }
 
-		if (lastFanSpeed != slidingMaxFanSpeed || lastTimeFanUpdate + MAX_FAN_SET_INTERVAL < time()) {
-			setFanSpeed(max(FAN_MIN_VALUE, slidingMaxFanSpeed));
-			lastTimeFanUpdate = time();
-		}
+    if (dynamicFanSpeed > slidingMaxFanSpeed ||
+        time() > maxFanSpeedTime + FAN_PEAK_HOLD_TIME) {
+      slidingMaxFanSpeed = dynamicFanSpeed;
+      maxFanSpeedTime = time();
+    }
 
+    if (lastFanSpeed != slidingMaxFanSpeed ||
+        lastTimeFanUpdate + MAX_FAN_SET_INTERVAL < time()) {
+      setFanSpeed(max(FAN_MIN_VALUE, slidingMaxFanSpeed));
+      lastTimeFanUpdate = time();
+    }
   }
 
   //   while (1) {
@@ -176,5 +177,5 @@ int main(int argc, char *argv[]) {
   //     cout << endl;
   //     lastFanSpeed = slidingMaxFanSpeed;
   //     usleep(REFRESH_RATE * 1000);
-return 0;
+  return 0;
 }
