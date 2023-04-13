@@ -11,8 +11,8 @@ using namespace std;
 #define TEMP 0x9E
 
 #define FAN_MIN_VALUE 40 // minimal rotation speed of the fan (0-255)
-#define FAN_OFF_TEMP 60  // temp below which fan is off
-#define FAN_MAX_TEMP 80  // at which temperature the fan should be maximum ?
+#define FAN_OFF_TEMP 70  // temp below which fan is off
+#define FAN_MAX_TEMP 90  // at which temperature the fan should be maximum ?
 #define FAN_START_VALUE                                                        \
   100 // speed (between 0 and 255) at which fan will turn when FAN_OFF_TEMP is
       // reached
@@ -20,7 +20,7 @@ using namespace std;
   10000 // when a maximum of fan rotation rate is reached, hold much time (ms)
         // to hold it before allowing to decrease the value
 
-#define REFRESH_RATE 1000 // time to wait between each controller loop (ms)
+#define REFRESH_RATE 250 // time to wait between each controller loop (ms)
 #define MAX_FAN_SET_INTERVAL                                                   \
   2000 // maximal time between two fan rate send command
 
@@ -100,20 +100,16 @@ static unsigned int time() {
 }
 
 int main(int argc, char *argv[]) {
-  // last fan speed value, used to avoid write speed if not necessary
-  int lastFanSpeed = 1;
-
-  // last max speed value, used in combination with FAN_PEAK_HOLD_TIME
-  int slidingMaxFanSpeed = -1;
-
-  // time at which the last max was reached, used in combination with
-  // FAN_PEAK_HOLD_TIME
-  unsigned int maxFanSpeedTime = 0;
-
-  // use this to periodically set the temp unconditionally (seuful when wake up
-  // from sleep)
-  unsigned int lastTimeFanUpdate = 0;
-
+  int lastFanSpeed =
+      -1; // last fan speed value, used to avoid write speed if not necessary
+  int slidingMaxFanSpeed =
+      -1; // last max speed value, used in combination with FAN_PEAK_HOLD_TIME
+  unsigned int maxFanSpeedTime =
+      0; // time at which the last max was reached, used in combination with
+         // FAN_PEAK_HOLD_TIME
+  unsigned int lastTimeFanUpdate =
+      0; // use this to periodically set the temp unconditionnaly (useful when
+         // wake of from sleep)
   while (1) {
     int temp = GetLocalTemp();
     // dynamic fan speed is the computed instantaneous speed, whithout
