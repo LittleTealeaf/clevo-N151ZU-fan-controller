@@ -12,7 +12,7 @@ using namespace std;
 
 #define FAN_MIN_VALUE 40 // minimal rotation speed of the fan (0-255)
 #define FAN_OFF_TEMP 60  // temp below which fan is off
-#define FAN_MAX_TEMP 90  // at which temperature the fan should be maximum ?
+#define FAN_MAX_TEMP 80  // at which temperature the fan should be maximum ?
 #define FAN_START_VALUE                                                        \
   100 // speed (between 0 and 255) at which fan will turn when FAN_OFF_TEMP is
       // reached
