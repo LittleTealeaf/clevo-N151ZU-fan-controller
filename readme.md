@@ -1,5 +1,7 @@
 # Clevo-N151ZU automatic fan control
 
+> Cloned from https://gitlab.com/francois.kneib/clevo-N151ZU-fan-controller
+
 Default (bios) fan behavior for these laptops is not optimized as it triggers fan at about 51°C, making it noizy even when doing almost nothing. However, the processor i7-85**U have a max temp of 100°C.
 This project brings a smarter automatic fan control, it makes it perfectly silent for less-demanding tasks like office, web, or even video-watch, but gradually power the fan when necessary. The behavior of the program is setup to:
 
